@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/egoing/server_side_javascript_tutorials#readme",
   "dependencies": {
+    "express": "^4.13.4",
     "underscore": "^1.8.3"
   }
 }
