@@ -14,6 +14,7 @@ var fs = require('fs');
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.locals.pretty = true;
+app.use('/user', express.static('uploads'));
 app.set('views', './views_file');
 app.set('view engine', 'jade');
 app.get('/upload', function(req, res){
