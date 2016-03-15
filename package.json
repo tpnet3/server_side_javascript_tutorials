@@ -20,6 +20,7 @@
     "body-parser": "^1.15.0",
     "express": "^4.13.4",
     "jade": "^1.11.0",
+    "orientjs": "^2.1.11",
     "underscore": "^1.8.3"
   }
 }
