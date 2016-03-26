@@ -20,6 +20,7 @@
     "body-parser": "^1.15.0",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
+    "express-session": "^1.13.0",
     "jade": "^1.11.0",
     "node-mysql": "^0.4.2",
     "orientjs": "^2.1.11",
