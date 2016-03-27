@@ -26,7 +26,9 @@ app.get('/count', function(req, res){
 });
 app.get('/auth/logout', function(req, res){
   delete req.session.displayName;
-  res.redirect('/welcome');
+  req.session.save(function(){
+      res.redirect('/welcome');
+  });
 });
 app.get('/welcome', function(req, res){
   if(req.session.displayName) {
@@ -51,7 +53,9 @@ app.post('/auth/login', function(req, res){
   var pwd = req.body.password;
   if(uname === user.username && pwd === user.password){
     req.session.displayName = user.displayName;
-    res.redirect('/welcome');
+    req.session.save(function(){
+        res.redirect('/welcome');
+    });
   } else {
     res.send('Who are you? <a href="/auth/login">login</a>');
   }
