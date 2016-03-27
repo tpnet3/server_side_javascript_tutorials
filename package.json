@@ -18,6 +18,7 @@
   "homepage": "https://github.com/egoing/server_side_javascript_tutorials#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "connect-oriento": "^0.1.4",
     "cookie-parser": "^1.4.1",
     "express": "^4.13.4",
     "express-mysql-session": "^1.0.0-rc.0",
