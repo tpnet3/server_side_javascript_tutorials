@@ -39,19 +39,18 @@ app.get('/welcome', function(req, res){
   }
 });
 app.post('/auth/login', function(req, res){
-  var user = {
-    username:'egoing',
-    password:'111',
-    displayName:'Egoing'
-  };
   var uname = req.body.username;
   var pwd = req.body.password;
-  if(uname === user.username && pwd === user.password){
-    req.session.displayName = user.displayName;
-    res.redirect('/welcome');
-  } else {
-    res.send('Who are you? <a href="/auth/login">login</a>');
+  for(var i=0; i<users.length; i++){
+    var user = users[i];
+    if(uname === user.username && pwd === user.password){
+      req.session.displayName = user.displayName;
+      return req.session.save(function(){
+          res.redirect('/welcome');
+      });
+    }
   }
+  res.send('Who are you? <a href="/auth/login">login</a>');
 });
 var users = [
   {
@@ -67,7 +66,10 @@ app.post('/auth/register', function(req, res){
     displayName:req.body.displayName
   };
   users.push(user);
-  res.send(users);
+  req.session.displayName = req.body.displayName;
+  req.session.save(function(){
+    res.redirect('/welcome');
+  });
 });
 app.get('/auth/register', function(req, res){
   var output = `
