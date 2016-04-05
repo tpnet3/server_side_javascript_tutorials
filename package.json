@@ -27,6 +27,7 @@
     "md5": "^2.1.0",
     "node-mysql": "^0.4.2",
     "orientjs": "^2.1.11",
+    "pbkdf2-password": "^1.1.0",
     "session-file-store": "^0.2.0",
     "sha256": "^0.2.0",
     "underscore": "^1.8.3"

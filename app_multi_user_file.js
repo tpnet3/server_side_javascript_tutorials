@@ -2,7 +2,9 @@ var express = require('express');
 var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var bodyParser = require('body-parser');
-var sha256 = require('sha256');
+var bkfd2Password = require("pbkdf2-password");
+var hasher = bkfd2Password();
+
 var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session({
@@ -56,15 +58,9 @@ app.post('/auth/login', function(req, res){
 var users = [
   {
     username:'egoing',
-    password:'4e3906f022fa70dc61b695c4a761956688cb97e724a51ca0aaafc5a97dea59c5',
-    salt:'!@#@!#$aaa',
+    password:'mTi+/qIi9s5ZFRPDxJLY8yAhlLnWTgYZNXfXlQ32e1u/hZePhlq41NkRfffEV+T92TGTlfxEitFZ98QhzofzFHLneWMWiEekxHD1qMrTH1CWY01NbngaAfgfveJPRivhLxLD1iJajwGmYAXhr69VrN2CWkVD+aS1wKbZd94bcaE=',
+    salt:'O0iC9xqMBUVl3BdO50+JWkpvVcA5g2VNaYTR5Hc45g+/iXy4PzcCI7GJN5h5r3aLxIhgMN8HSh0DhyqwAp8lLw==',
     displayName:'Egoing'
-  },
-  {
-    username:'K8805',
-    password:'0b5699baf59161ae196596d500f5b1531b92916c3f840950a2815b28bdb50eed',
-    salt:'!@#$adsfav#@$',
-    displayName:'K5'
   }
 ];
 app.post('/auth/register', function(req, res){
