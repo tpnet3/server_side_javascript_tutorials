@@ -3,6 +3,8 @@ var session = require('express-session');
 var FileStore = require('session-file-store')(session);
 var bodyParser = require('body-parser');
 var bkfd2Password = require("pbkdf2-password");
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var hasher = bkfd2Password();
 
 var app = express();
@@ -13,6 +15,8 @@ app.use(session({
   saveUninitialized: true,
   store:new FileStore()
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.get('/count', function(req, res){
   if(req.session.count) {
     req.session.count++;
@@ -41,26 +45,71 @@ app.get('/welcome', function(req, res){
     `);
   }
 });
-app.post('/auth/login', function(req, res){
-  var uname = req.body.username;
-  var pwd = req.body.password;
+passport.serializeUser(function(user, done) {
+  console.log('serializeUser', user);
+  done(null, user.username);
+});
+
+passport.deserializeUser(function(id, done) {
+  console.log('deserializeUser', id);
   for(var i=0; i<users.length; i++){
     var user = users[i];
-    if(uname === user.username) {
-      return hasher({password:pwd, salt:user.salt}, function(err, pass, salt, hash){
-        if(hash === user.password){
-          req.session.displayName = user.displayName;
-          req.session.save(function(){
-            res.redirect('/welcome');
-          })
-        } else {
-          res.send('Who are you? <a href="/auth/login">login</a>');
-        }
-      });
+    if(user.username === id){
+      return done(null, user);
     }
   }
-  res.send('Who are you? 2<a href="/auth/login">login</a>');
 });
+passport.use(new LocalStrategy(
+  function(username, password, done){
+    var uname = username;
+    var pwd = password;
+    for(var i=0; i<users.length; i++){
+      var user = users[i];
+      if(uname === user.username) {
+        return hasher({password:pwd, salt:user.salt}, function(err, pass, salt, hash){
+          if(hash === user.password){
+            console.log('LocalStrategy', user);
+            done(null, user);
+          } else {
+            done(null, false);
+          }
+        });
+      }
+    }
+    done(null, false);
+  }
+));
+app.post(
+  '/auth/login',
+  passport.authenticate(
+    'local',
+    {
+      successRedirect: '/welcome',
+      failureRedirect: '/auth/login',
+      failureFlash: false
+    }
+  )
+);
+// app.post('/auth/login', function(req, res){
+//   var uname = req.body.username;
+//   var pwd = req.body.password;
+//   for(var i=0; i<users.length; i++){
+//     var user = users[i];
+//     if(uname === user.username) {
+//       return hasher({password:pwd, salt:user.salt}, function(err, pass, salt, hash){
+//         if(hash === user.password){
+//           req.session.displayName = user.displayName;
+//           req.session.save(function(){
+//             res.redirect('/welcome');
+//           })
+//         } else {
+//           res.send('Who are you? <a href="/auth/login">login</a>');
+//         }
+//       });
+//     }
+//   }
+//   res.send('Who are you? 2<a href="/auth/login">login</a>');
+// });
 var users = [
   {
     username:'egoing',
