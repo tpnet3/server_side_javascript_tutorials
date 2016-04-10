@@ -28,6 +28,7 @@
     "node-mysql": "^0.4.2",
     "orientjs": "^2.1.11",
     "passport": "^0.3.2",
+    "passport-facebook": "^2.1.0",
     "passport-local": "^1.0.0",
     "pbkdf2-password": "^1.1.0",
     "session-file-store": "^0.2.0",
