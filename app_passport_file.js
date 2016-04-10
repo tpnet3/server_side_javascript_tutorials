@@ -60,6 +60,7 @@ passport.deserializeUser(function(id, done) {
       return done(null, user);
     }
   }
+  done('There is no user.');
 });
 passport.use(new LocalStrategy(
   function(username, password, done){
@@ -84,7 +85,8 @@ passport.use(new LocalStrategy(
 passport.use(new FacebookStrategy({
     clientID: '1602353993419626',
     clientSecret: '232bc1d3aca2199e6a27eb983e602e0b',
-    callbackURL: "/auth/facebook/callback"
+    callbackURL: "/auth/facebook/callback",
+    profileFields:['id', 'email', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified', 'displayName']
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
@@ -97,7 +99,8 @@ passport.use(new FacebookStrategy({
     }
     var newuser = {
       'authId':authId,
-      'displayName':profile.displayName
+      'displayName':profile.displayName,
+      'email':profile.emails[0].value
     };
     users.push(newuser);
     done(null, newuser);
@@ -117,7 +120,8 @@ app.post(
 app.get(
   '/auth/facebook',
   passport.authenticate(
-    'facebook'
+    'facebook',
+    {scope:'email'}
   )
 );
 app.get(
