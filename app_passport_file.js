@@ -26,13 +26,15 @@ app.get('/count', function(req, res){
   res.send('count : '+req.session.count);
 });
 app.get('/auth/logout', function(req, res){
-  delete req.session.displayName;
-  res.redirect('/welcome');
+  req.logout();
+  req.session.save(function(){
+    res.redirect('/welcome');
+  });
 });
 app.get('/welcome', function(req, res){
-  if(req.session.displayName) {
+  if(req.user && req.user.displayName) {
     res.send(`
-      <h1>Hello, ${req.session.displayName}</h1>
+      <h1>Hello, ${req.user.displayName}</h1>
       <a href="/auth/logout">logout</a>
     `);
   } else {
@@ -90,26 +92,6 @@ app.post(
     }
   )
 );
-// app.post('/auth/login', function(req, res){
-//   var uname = req.body.username;
-//   var pwd = req.body.password;
-//   for(var i=0; i<users.length; i++){
-//     var user = users[i];
-//     if(uname === user.username) {
-//       return hasher({password:pwd, salt:user.salt}, function(err, pass, salt, hash){
-//         if(hash === user.password){
-//           req.session.displayName = user.displayName;
-//           req.session.save(function(){
-//             res.redirect('/welcome');
-//           })
-//         } else {
-//           res.send('Who are you? <a href="/auth/login">login</a>');
-//         }
-//       });
-//     }
-//   }
-//   res.send('Who are you? 2<a href="/auth/login">login</a>');
-// });
 var users = [
   {
     username:'egoing',
@@ -127,9 +109,10 @@ app.post('/auth/register', function(req, res){
       displayName:req.body.displayName
     };
     users.push(user);
-    req.session.displayName = req.body.displayName;
-    req.session.save(function(){
-      res.redirect('/welcome');
+    req.login(user, function(err){
+      req.session.save(function(){
+        res.redirect('/welcome');
+      });
     });
   });
 });
