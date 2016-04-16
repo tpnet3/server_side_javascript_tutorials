@@ -95,26 +95,33 @@ passport.use(new LocalStrategy(
 ));
 passport.use(new FacebookStrategy({
     clientID: '1602353993419626',
-    clientSecret: '232bc1d3aca2199e6a27eb983e602e0b',
+    clientSecret: 'ad9ceec42e67b706992ac7f1fc2aeee7',
     callbackURL: "/auth/facebook/callback",
     profileFields:['id', 'email', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified', 'displayName']
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
     var authId = 'facebook:'+profile.id;
-    for(var i=0; i<users.length; i++){
-      var user = users[i];
-      if(user.authId === authId){
-        return done(null, user);
+    var sql = 'SELECT FROM user WHERE authId=:authId';
+    db.query(sql, {params:{authId:authId}}).then(function(results){
+      console.log(results, authId);
+      if(results.length === 0){
+        var newuser = {
+          'authId':authId,
+          'displayName':profile.displayName,
+          'email':profile.emails[0].value
+        };
+        var sql = 'INSERT INTO user (authId, displayName, email) VALUES(:authId, :displayName, :email)';
+        db.query(sql, {params:newuser}).then(function(){
+          done(null, newuser);
+        }, function(error){
+          console.log(error);
+          done('Error');
+        })
+      } else {
+        return done(null, results[0]);
       }
-    }
-    var newuser = {
-      'authId':authId,
-      'displayName':profile.displayName,
-      'email':profile.emails[0].value
-    };
-    users.push(newuser);
-    done(null, newuser);
+    })
   }
 ));
 app.post(
