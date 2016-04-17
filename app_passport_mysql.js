@@ -100,26 +100,34 @@ passport.use(new LocalStrategy(
 ));
 passport.use(new FacebookStrategy({
     clientID: '1602353993419626',
-    clientSecret: '232bc1d3aca2199e6a27eb983e602e0b',
+    clientSecret: '6c7c3f6563511116dbc13b06f81a3985',
     callbackURL: "/auth/facebook/callback",
     profileFields:['id', 'email', 'gender', 'link', 'locale', 'name', 'timezone', 'updated_time', 'verified', 'displayName']
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
     var authId = 'facebook:'+profile.id;
-    for(var i=0; i<users.length; i++){
-      var user = users[i];
-      if(user.authId === authId){
-        return done(null, user);
+    var sql = 'SELECT * FROM users WHERE authId=?';
+    conn.query(sql, [authId], function(err, results){
+      if(results.length>0){
+        done(null, results[0]);
+      } else {
+        var newuser = {
+          'authId':authId,
+          'displayName':profile.displayName,
+          'email':profile.emails[0].value
+        };
+        var sql = 'INSERT INTO users SET ?'
+        conn.query(sql, newuser, function(err, results){
+          if(err){
+            console.log(err);
+            done('Error');
+          } else {
+            done(null, newuser);
+          }
+        })
       }
-    }
-    var newuser = {
-      'authId':authId,
-      'displayName':profile.displayName,
-      'email':profile.emails[0].value
-    };
-    users.push(newuser);
-    done(null, newuser);
+    });
   }
 ));
 app.post(
@@ -150,15 +158,6 @@ app.get(
     }
   )
 );
-var users = [
-  {
-    authId:'local:egoing',
-    username:'egoing',
-    password:'mTi+/qIi9s5ZFRPDxJLY8yAhlLnWTgYZNXfXlQ32e1u/hZePhlq41NkRfffEV+T92TGTlfxEitFZ98QhzofzFHLneWMWiEekxHD1qMrTH1CWY01NbngaAfgfveJPRivhLxLD1iJajwGmYAXhr69VrN2CWkVD+aS1wKbZd94bcaE=',
-    salt:'O0iC9xqMBUVl3BdO50+JWkpvVcA5g2VNaYTR5Hc45g+/iXy4PzcCI7GJN5h5r3aLxIhgMN8HSh0DhyqwAp8lLw==',
-    displayName:'Egoing'
-  }
-];
 app.post('/auth/register', function(req, res){
   hasher({password:req.body.password}, function(err, pass, salt, hash){
     var user = {
