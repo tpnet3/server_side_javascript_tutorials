@@ -71,5 +71,12 @@ module.exports = function(passport){
   route.get('/login', function(req, res){
     res.render('auth/login');
   });
+
+  route.get('/logout', function(req, res){
+    req.logout();
+    req.session.save(function(){
+      res.redirect('/welcome');
+    });
+  });
   return route;
 };
