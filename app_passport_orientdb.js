@@ -2,19 +2,13 @@ var express = require('express');
 var session = require('express-session');
 var OrientoStore = require('connect-oriento')(session);
 var bodyParser = require('body-parser');
-var bkfd2Password = require("pbkdf2-password");
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var bkfd2Password = require("pbkdf2-password");
 var hasher = bkfd2Password();
-var OrientDB = require('orientjs');
-var server = OrientDB({
-  host: 'localhost',
-  port: 2424,
-  username: 'root',
-  password: '111111'
-});
-var db = server.use('o2');
+var db = require('./config/orientdb/db')();
 var app = express();
 app.set('views', './views/orientdb');
 app.set('view engine', 'jade');
@@ -126,74 +120,10 @@ passport.use(new FacebookStrategy({
     })
   }
 ));
-app.post(
-  '/auth/login',
-  passport.authenticate(
-    'local',
-    {
-      successRedirect: '/welcome',
-      failureRedirect: '/auth/login',
-      failureFlash: false
-    }
-  )
-);
-app.get(
-  '/auth/facebook',
-  passport.authenticate(
-    'facebook',
-    {scope:'email'}
-  )
-);
-app.get(
-  '/auth/facebook/callback',
-  passport.authenticate(
-    'facebook',
-    {
-      successRedirect: '/welcome',
-      failureRedirect: '/auth/login'
-    }
-  )
-);
-var users = [
-  {
-    authId:'local:egoing',
-    username:'egoing',
-    password:'mTi+/qIi9s5ZFRPDxJLY8yAhlLnWTgYZNXfXlQ32e1u/hZePhlq41NkRfffEV+T92TGTlfxEitFZ98QhzofzFHLneWMWiEekxHD1qMrTH1CWY01NbngaAfgfveJPRivhLxLD1iJajwGmYAXhr69VrN2CWkVD+aS1wKbZd94bcaE=',
-    salt:'O0iC9xqMBUVl3BdO50+JWkpvVcA5g2VNaYTR5Hc45g+/iXy4PzcCI7GJN5h5r3aLxIhgMN8HSh0DhyqwAp8lLw==',
-    displayName:'Egoing'
-  }
-];
-app.post('/auth/register', function(req, res){
-  hasher({password:req.body.password}, function(err, pass, salt, hash){
-    var user = {
-      authId:'local:'+req.body.username,
-      username:req.body.username,
-      password:hash,
-      salt:salt,
-      displayName:req.body.displayName
-    };
-    var sql = 'INSERT INTO user (authId,username,password,salt,displayName) VALUES(:authId,:username,:password,:salt,:displayName)';
-    db.query(sql, {
-      params:user
-    }).then(function(results){
-      req.login(user, function(err){
-        req.session.save(function(){
-          res.redirect('/welcome');
-        });
-      });
-    }, function(error){
-      console.log(error);
-      res.status(500);
-    });
-  });
-});
-app.get('/auth/register', function(req, res){
-  res.render('auth/register');
-});
 
-app.get('/auth/login', function(req, res){
-  res.render('auth/login');
-});
+var auth = require('./routes/orientdb/auth')(passport);
+app.use('/auth', auth);
+
 app.listen(3003, function(){
   console.log('Connected 3003 port!!!');
 });
