@@ -23,7 +23,7 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.locals.pretty = true;
 app.use('/user', express.static('uploads'));
-app.set('views', './views_orientdb');
+app.set('views', './views/orientdb');
 app.set('view engine', 'jade');
 app.get('/upload', function(req, res){
   res.render('upload');
@@ -34,7 +34,7 @@ app.post('/upload', upload.single('userfile'), function(req, res){
 app.get('/topic/add', function(req, res){
   var sql = 'SELECT FROM topic';
   db.query(sql).then(function(topics){
-    res.render('add', {topics:topics});
+    res.render('topic/add', {topics:topics});
   });
 });
 app.post('/topic/add', function(req, res){
@@ -58,7 +58,7 @@ app.get('/topic/:id/edit', function(req, res){
   db.query(sql).then(function(topics){
     var sql = 'SELECT FROM topic WHERE @rid=:rid';
     db.query(sql, {params:{rid:id}}).then(function(topic){
-      res.render('edit', {topics:topics, topic:topic[0]});
+      res.render('topic/edit', {topics:topics, topic:topic[0]});
     });
   });
 });
@@ -85,7 +85,7 @@ app.get('/topic/:id/delete', function(req, res){
   db.query(sql).then(function(topics){
     var sql = 'SELECT FROM topic WHERE @rid=:rid';
     db.query(sql, {params:{rid:id}}).then(function(topic){
-      res.render('delete', {topics:topics, topic:topic[0]});
+      res.render('topic/delete', {topics:topics, topic:topic[0]});
     });
   });
 });
@@ -107,14 +107,14 @@ app.get(['/topic', '/topic/:id'], function(req, res){
     if(id){
       var sql = 'SELECT FROM topic WHERE @rid=:rid';
       db.query(sql, {params:{rid:id}}).then(function(topic){
-        res.render('view', {topics:topics, topic:topic[0]});
+        res.render('topic/view', {topics:topics, topic:topic[0]});
       });
     } else {
-      res.render('view', {topics:topics});
+      res.render('topic/view', {topics:topics});
     }
   });
 });
 
-app.listen(3000, function(){
-  console.log('Connected, 3000 port!');
+app.listen(3003, function(){
+  console.log('Connected, 3003 port!');
 })

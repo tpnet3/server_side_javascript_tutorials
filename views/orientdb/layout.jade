@@ -10,10 +10,4 @@ html
         li
           - rid = encodeURIComponent(topic['@rid'])
           a(href='/topic/'+rid)= topic.title
-    artcle
-      h1= 'Delete? '+topic.title
-      - rid = encodeURIComponent(topic['@rid'])
-      form(action='/topic/'+rid+'/delete' method='post')
-        p
-          input(type='submit' value='YES')
-      a(href='/topic/'+rid) No
+    block content
