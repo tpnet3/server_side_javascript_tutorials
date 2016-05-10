@@ -8,7 +8,7 @@ module.exports = function(passport){
     passport.authenticate(
       'local',
       {
-        successRedirect: '/welcome',
+        successRedirect: '/topic',
         failureRedirect: '/auth/login',
         failureFlash: false
       }
@@ -26,7 +26,7 @@ module.exports = function(passport){
     passport.authenticate(
       'facebook',
       {
-        successRedirect: '/welcome',
+        successRedirect: '/topic',
         failureRedirect: '/auth/login'
       }
     )
@@ -55,7 +55,7 @@ module.exports = function(passport){
       }).then(function(results){
         req.login(user, function(err){
           req.session.save(function(){
-            res.redirect('/welcome');
+            res.redirect('/topic');
           });
         });
       }, function(error){
@@ -65,17 +65,23 @@ module.exports = function(passport){
     });
   });
   route.get('/register', function(req, res){
-    res.render('auth/register');
+    var sql = 'SELECT FROM topic';
+    db.query(sql).then(function(topics){
+      res.render('auth/register', {topics:topics});
+    });
   });
 
   route.get('/login', function(req, res){
-    res.render('auth/login');
+    var sql = 'SELECT FROM topic';
+    db.query(sql).then(function(topics){
+      res.render('auth/login', {topics:topics});
+    });
   });
 
   route.get('/logout', function(req, res){
     req.logout();
     req.session.save(function(){
-      res.redirect('/welcome');
+      res.redirect('/topic');
     });
   });
   return route;
