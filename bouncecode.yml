@@ -9,7 +9,7 @@ information:
 
 exercises:
     -
-        section: JavaScript (nodejs)
+        section: nodejs 와 NPM
         lecture:
             -
                 subject: 서버 측 자바스크립트와 nodejs 소개
@@ -56,16 +56,30 @@ exercises:
                     });
                     ```
             -
-                subject: nodejs 설치 및 실행
+                subject: 모듈 기초
+                active:
+                    - module.js
+                run:
+                    - node module.js
                 guide: |
                     본 수업은 에플리케이션에서 부품으로 사용할 로직인 모듈에 대해서 알아보고 모듈을 편리하게 관리하는 기술인 NPM을 사용하는 기본적인 방법을 알아봅니다. 
                     
                     <iframe width="100%" height="240" src="https://www.youtube.com/embed/NrQZtdwAV0c?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                    
+            -
+                subject: NPM 소개 및 독립적인 앱 설치
+                active:
+                    - pretty.js
+                guide: |
                     <iframe width="100%" height="240" src="https://www.youtube.com/embed/QHMKCtBPqdM?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
                     <iframe width="100%" height="240" src="https://www.youtube.com/embed/MWavheBdc2I?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-
+            -
+                subject: NPM 으로 모듈 설치및 사용법
+                active:
+                    - underscore.js
+                run:
+                    - node underscore.js
+                guide: |
                     <iframe width="100%" height="240" src="https://www.youtube.com/embed/MRd0pb2X8FE?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
                     <iframe width="100%" height="240" src="https://www.youtube.com/embed/iq05rnH6B-4?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
