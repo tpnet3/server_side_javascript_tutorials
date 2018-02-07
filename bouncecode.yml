@@ -1,0 +1,74 @@
+name: opentutorials-nodejs
+
+install:
+    - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
+    - sudo apt-get install -y nodejs
+
+copy: 
+    - webserver.js
+
+information:
+    title: JavaScript (nodejs)
+
+exercises:
+    -
+        section: JavaScript (nodejs)
+        lecture:
+            -
+                subject: 서버 측 자바스크립트와 nodejs 소개
+                guide: |
+                    여기서는 서버 측에서 동작하는 자바스크립트 수업의 핵심적인 기술인 Nodejs가 무엇인가를 설명합니다.
+                    
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/AkMjAlHwCy0?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            -
+                subject: nodejs 설치 및 실행
+                guide: |
+                    이번 수업에서는 Nodejs를 설치하고, 간단한 프로그램을 만들어서 실행시키는 방법을 알아봅니다. 
+                    
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/60zErcCmBfM?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/M3fQvQU5kQk?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            -
+                subject: 간단한 웹 에플리케이션 만들기
+                active:
+                    - webserver.js
+                run:
+                    - ((bouncecode open http://localhost:1337 -p 1337) &) && node webserver.js
+                guide: |
+                    본 수업에서는 Nodejs를 이용해서 간단한 서버 에플리케이션을 만들어보겠습니다. 
+                    
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/1yrdmt-YaFg?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/hpZ0bLk6G-o?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/MZAzeKVMMp0?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    
+                    아래 코드는 Nodejs에서 제공하는 기본 코드입니다.
+                    
+                    ```javascript
+                    const http = require('http');
+ 
+                    const hostname = '127.0.0.1';
+                    const port = 1337;
+
+                    http.createServer((req, res) => {
+                      res.writeHead(200, { 'Content-Type': 'text/plain' });
+                      res.end('Hello World\n');
+                    }).listen(port, hostname, () => {
+                      console.log(`Server running at http://${hostname}:${port}/`);
+                    });
+                    ```
+            -
+                subject: nodejs 설치 및 실행
+                guide: |
+                    본 수업은 에플리케이션에서 부품으로 사용할 로직인 모듈에 대해서 알아보고 모듈을 편리하게 관리하는 기술인 NPM을 사용하는 기본적인 방법을 알아봅니다. 
+                    
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/NrQZtdwAV0c?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/QHMKCtBPqdM?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/MWavheBdc2I?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/MRd0pb2X8FE?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+                    <iframe width="100%" height="240" src="https://www.youtube.com/embed/iq05rnH6B-4?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
